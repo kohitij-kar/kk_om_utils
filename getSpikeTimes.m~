@@ -1,0 +1,31 @@
+function spikeTime = getSpikeTimes(filename,fs,fLow, fHigh, saveit)
+% This function follows: "Unsupervised Spike Detection and Sorting with
+% Wavelets and Superparamagnetic Clustering" by R. Quian Quiroga and Z. Nadasdy
+%
+
+v = getRawData(filename);
+%%
+nrSegments  = 5;
+nrPerSegment = ceil(size(v,1)/nrSegments);
+MLTPL    =3;
+%%
+spikeTime = nan;
+for i = 1:nrSegments
+    disp(i);
+    v1 = applyBP(v(i*nrPerSegment - (nrPerSegment-1):i*nrPerSegment),fs,fLow, fHigh);
+    cData = v1';
+    samplingRate = 20000;
+    t = 1000*(i*nrPerSegment - nrPerSegment:i*nrPerSegment-1)./samplingRate; % time indices
+    noiseLevel = MLTPL*median(abs(cData))/0.6745;
+    outside = abs(cData) > abs(noiseLevel); % Spikes in data
+    cross   = [outside(1) diff(outside)>0];
+    index   = cross;
+    spikeTime = [spikeTime;t(index)'];
+end
+spikeTime(1)=[];
+%% removing extra detections
+diffSpkTime = [2;diff(spikeTime)];
+delLoc = (diffSpkTime<1.5);
+spikeTime(delLoc)=[];
+
+end
