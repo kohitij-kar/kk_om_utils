@@ -1,10 +1,10 @@
 # kk_om_utils
 This repository contains code that I started writing in 2016, for my projects that use large scale electrophysiology in NHP. This was written mainly to run computations done for each Utah array site in parallel in a HPC (openmind at MIT).  
 
-To run these in openmind, make sure you do the following:
+To run these in openmind, make sure you do the following:<br/>
 
-1. add the head folder and all subfolder in the MATLAB path
-       addpath(genpath('\path-to-head-folder'));
+1. add the head folder and all subfolder in the MATLAB path<br/>
+       addpath(genpath('\path-to-head-folder'));<br/>
        
-2. make a config file for yourself and put it on the headfolder
+2. make a config file for yourself and put it on the headfolder<br/>
 A sample config file, config.mat is placed on the head folder (you can choose to just modify that)
