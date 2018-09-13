@@ -3,7 +3,7 @@ function filtData = applyBP(data,fs,fLow, fHigh)
 % This function implements a bandpass filter
 % filtData = applyBP(data,fs, fLow, fHigh);
 % INPUT:
-% data = rawData that has been created by v = getRawData(filename);
+% data = rawData that has been created by "data = getRawData(filename);"
 % fs = sampling frequency; 20000 Hz for current set up
 % fLow = lower bound of the filter
 % fHigh = higher bound of the filter

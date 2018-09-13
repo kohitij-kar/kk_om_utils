@@ -1,8 +1,9 @@
 function v = getRawData(filename)
-% This file has been created from the intan manual
+% This function has been created from the intan manual
 % v = getRawData(filename);
-% filename = raw .dat file from the intan software
-% v = bit values converted into microvolts
+% filename = raw .dat file from the intan software [I use one file per
+% channel format]
+% v = bit values converted into microvolts (per sampled time)
 % $KK
 
 
