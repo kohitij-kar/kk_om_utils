@@ -33,7 +33,7 @@ x = str2double(num);
 
 cd(rawdataDirectory)
 rdelete('._*')
-directories = rdir('*date*','dironly');
+directories = rdir('*',date,'*','dironly');
 disp(length(directories));
 for i = 1:length(directories)
 disp([rawdataDirectory,directories{i}]);
