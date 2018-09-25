@@ -1,5 +1,11 @@
 function runGetPSTH(varargin)
-
+% This function runs the getPSTH.m file that is used to compute the psth
+% for the given channel
+% use:runGetPSTH(varargin)
+% inputs are:
+% 'num' : channel number, should be a string . like '1'
+% 'date'
+%$KK
 p = inputParser;
 p.addParameter('num',[],@isstr);
 p.addParameter('date',[],@isstr);

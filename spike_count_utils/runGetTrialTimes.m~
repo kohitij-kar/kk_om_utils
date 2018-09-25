@@ -1,13 +1,9 @@
 function runGetTrialTimes(varargin)
-% This function loads the relevant digital file and estimates the trial
-% times when the images were flashed
 % use: runGetTrialTimes(varargin)
 % input arguments can be:
 % 'num' : channel number, should be a string . like '1'
-% 'rawdataDirectory' : leave this empty if you want to load from config.mat
-% 'saveDirectory':leave this empty if you want to load from config.mat
-% 'date'
-% $KK
+% 
+
 %%
 p = inputParser;
 p.addParameter('num', 0, @ischar);
