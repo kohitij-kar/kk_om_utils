@@ -5,9 +5,6 @@ function runGetPSTH(varargin)
 % inputs are:
 % 'num' : channel number, should be a string . like '1'
 % 'date'
-% 'binsize'
-% 'startTime'
-% 'stopTime'
 %$KK
 p = inputParser;
 p.addParameter('num',[],@isstr);
@@ -19,9 +16,8 @@ p.parse(varargin{:});
 %%
 num = p.Results.num;
 date= p.Results.date;
-binsize =p.Results.binsize;
-start = p.Results.start;
-stop = p.Results.stop;
+binsize
+s
 x = str2double(num);
 %%
     temp= load('config.mat');
