@@ -22,15 +22,19 @@ baseDirectory = p.Results.baseDirectory;
 date = p.Results.date;
 
 %% 
-addpath(genpath('/home/kohitij/matlab/fileseries'));
-addpath(genpath('/home/kohitij/matlab/Ephys_tools'));
+
+if(isempty(baseDirectory))
+    temp= load('config.mat');
+    config = temp.config;
+    baseDirectory = config.raw.baseaddress;
+end
 %% 
 x = str2double(num);
 
-if(x<256) % Box 1 has 256 channles
-	cd([baseDirectory,'/open_ephys/box1/']);
+
+	cd(baseDirectory);
 	rdelete('._*'); % delete garbage files
-	directories = rdir(['ko*',date,'*'],'dironly');
+	directories = rdir(['*',date,'*'],'dironly');
 	for i = 1:length(directories)
 		cd(directories{i})
 		rdelete('._*');
@@ -47,18 +51,8 @@ if(x<256) % Box 1 has 256 channles
 		cd ..
 	end
 
-else     % Box2 has 32 channels
 
-	cd([baseDirectory,'/open_ephys/box2/']);
-	directories = rdir(['ko*',date,'*'],'dironly');
-	for i = 1:length(directories)
-		cd(directories{i})
-		F = rdir('amp*.dat','fileonly');
-		getSpikeTimes('filename',F{x+1-256},'foldername',directories{i},'fs',20000,'fLow',300,'fHigh',6000,'saveit',true,'MLTPL',3);
-		cd ..
-
-	end
 
 end
 
-end
+

@@ -15,7 +15,7 @@ function spikeTime = getSpikeTimes(varargin)
 
 p = inputParser;
 p.addParameter('filename', 'amp-C-020.dat', @isstr);
-p.addParameter('foldername', 'sample_data/ko-mag-rsvpRF_170522_144318', @isstr);
+p.addParameter('foldername', [], @isstr);
 p.addParameter('fs', 20000, @isnumeric);
 p.addParameter('fLow', 300, @isnumeric);
 p.addParameter('fHigh', 6000, @isnumeric);
@@ -30,16 +30,19 @@ fLow = p.Results.fLow;
 fHigh = p.Results.fHigh;
 saveit = p.Results.saveit;
 MLTPL = p.Results.MLTPL;
-
+%% 
+    temp= load('config.mat');
+    config = temp.config;
+    saveDirectory = config.proc.baseaddress;
 %%
-if(~exist(['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername,'/spikeTime'],'dir'))
-    disp('creating new preproc folder')
-    mkdir(['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername,'/spikeTime']);
+if(~exist([saveDirectory,foldername,'/spikeTime'],'dir'))
+    disp('creating new folder')
+    mkdir([saveDirectory,foldername,'/spikeTime']);
 end
 
 %%
 disp(foldername);
-if(~exist(['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername,'/spikeTime/',filename(1:end-4),'_spk.mat'],'file'))
+if(~exist([saveDirectory,foldername,'/spikeTime/',filename(1:end-4),'_spk.mat'],'file'))
 disp('starting spike detection');
 v = getRawData(filename);
 %%
@@ -61,7 +64,7 @@ end
 spikeTime(1)=[];
 
 if(saveit)
-     save('-v7.3',['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername,'/spikeTime/',filename(1:end-4),'_spk.mat'],'spikeTime');
+     save('-v7.3',[saveDirectory,foldername,'/spikeTime/',filename(1:end-4),'_spk.mat'],'spikeTime');
 end
 end
 end

@@ -8,7 +8,7 @@ function psth = getPSTH(varargin)
 % 'binSize'
 % 'startTime'
 % 'stopTime'
-% 'savePrefix'
+% 'savePostfix'
 % $KK
 %%
 p = inputParser;
@@ -18,7 +18,7 @@ p.addParameter('samp_on',[],@isnumeric);
 p.addParameter('binSize',10,@isnumeric);
 p.addParameter('startTime', -100, @isnumeric);
 p.addParameter('stopTime', 500,@isnumeric);
-p.addParameter('savePrefix','',@isstr);
+p.addParameter('savePostfix','',@isstr); % adds this string at the end of the psth filename
 p.parse(varargin{:});
 %%
 
@@ -28,15 +28,19 @@ samp_on    = p.Results.samp_on;
 tb         = p.Results.binSize; 
 startTime  = p.Results.startTime;
 stopTime   = p.Results.stopTime;
-prefix        = p.Results.savePrefix;
+postfix        = p.Results.savePostfix;
+%% 
+    temp= load('config.mat');
+    config = temp.config;
+    saveDirectory = config.proc.baseaddress;
 %%
-if(~exist(['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername,'/psth'],'dir'))
- mkdir(['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername,'/psth'])
+if(~exist([saveDirectory,foldername,'/psth'],'dir'))
+ mkdir([saveDirectory,foldername,'/psth'])
 end
 
 disp([foldername, ': ', filename])
 
-if(~exist(['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername,'/psth/',filename(1:end-4),prefix,'_psth.mat'],'file'))
+if(~exist([saveDirectory,foldername,'/psth/',filename(1:end-4),postfix,'_psth.mat'],'file'))
 %% Estimate PSTH
     disp('Starting to estimate PSTH');
     load(filename);
@@ -50,7 +54,7 @@ if(~exist(['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername
 meta.startTime = startTime;
 meta.stopTime = stopTime;
 meta.timebin = tb;
-save(['/braintree/data2/active/users/kohitij/raw_data/pre_proc/',foldername,'/psth/',filename(1:end-4),prefix,'_psth.mat'],'psth', 'meta');
+save([saveDirectory,foldername,'/psth/',filename(1:end-4),postfix,'_psth.mat'],'psth', 'meta');
 end
 
 end

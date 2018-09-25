@@ -1,60 +1,52 @@
 function runGetTrialTimes(varargin)
-%%
-addpath(genpath('/home/kohitij/matlab/fileseries'));
-addpath(genpath('/home/kohitij/matlab/Ephys_tools'));
 
 %%
 p = inputParser;
 p.addParameter('num', 0, @ischar);
-p.addParameter('rawdataDirectory', '/om/data/public/kohitij',@ischar);
-p.addParameter('box','box1',@ischar);
+p.addParameter('rawdataDirectory', [],@ischar);
 p.addParameter('samplingFrequency',20000,@isnumeric);
-p.addParameter('saveDirectory','/braintree/data2/active/users/kohitij/raw_data/pre_proc/',@ischar);
+p.addParameter('saveDirectory',[],@ischar);
+p.addParameter('date',[],@isstr); % date if specified, then the code only looks at folder from that date
 p.parse(varargin{:});
 
 %%
 num = p.Results.num;
 rawdataDirectory = p.Results.rawdataDirectory;
-box = p.Results.box;
 fs = p.Results.samplingFrequency;
 saveDirectory = p.Results.saveDirectory;
+date = p.Results.date;
+%%
+if(isempty(rawdataDirectory))
+    temp= load('config.mat');
+    config = temp.config;
+    rawdataDirectory = config.raw.baseaddress;
+end
 
+if(isempty(saveDirectory))
+    temp= load('config.mat');
+    config = temp.config;
+    saveDirectory = config.proc.baseaddress;
+end
 %%
 
 x = str2double(num);
 
-cd([rawdataDirectory,'/open_ephys/',box,'/'])
+cd(rawdataDirectory)
 rdelete('._*')
-directories = rdir('*180912*','dironly');
+directories = rdir('*date*','dironly');
 disp(length(directories));
 for i = 1:length(directories)
-disp([rawdataDirectory, '/open_ephys/',box,'/',directories{i}]);
+disp([rawdataDirectory,directories{i}]);
 if(~exist([saveDirectory, directories{i},'/',directories{i},'_trialTimes.mat'],'file'))
-cd([rawdataDirectory, '/open_ephys/',box,'/',directories{i}]);
-files = rdir('*.dat','fileonly');
-digicheck = sum(contains(files,'DIN-'))>0;
-switch(box)
-   case 'box1'
-
-	if(digicheck)
-		din1 = read_digitalBoard('board-DIN-01.dat');
-	else
-		din1 = read_digitalBoard('board-DIGITAL-IN-02.dat');
-	end
-
-   case 'box2'
-
-        if(digicheck)
-                din1 = read_digitalBoard('board-DIN-01.dat');
-       	else
-                din1 = read_digitalBoard('board-DIGITAL-IN-02.dat');
-       	end
-
+    cd([rawdataDirectory,directories{i}]);
+    din1 = read_digitalBoard('board-DIGITAL-IN-02.dat');
 end 
 
 
 samp_on = (strfind(din1',[0 1]))*1000/fs; % multiplied by 1000 to convert to ms
-%test_on = (strfind(din2',[0 1]))*1000/fs; % multiplied by 1000 to convert to ms
+if(~exist([saveDirectory,directories{i}],'dir'))
+           mkdir([saveDirectory,directories{i}]);
+end
 save([saveDirectory, directories{i},'/',directories{i},'_trialTimes.mat'],'samp_on');
 end
 cd ..
